@@ -6,6 +6,7 @@ Welcome to our AES (Advanced Encryption Standard) Encryption/Decryption Online T
 
 - **Secure Encryption**: Encrypt your text using AES with a custom key.
 - **Secure Decryption**: Decrypt previously encrypted text using the same key.
+- **SHA Key Processing**: The input key is processed with SHA to allow for encryption and decryption using any key length.
 - **User-Friendly Interface**: Simple and intuitive interface for easy use.
 - **Privacy Focused**: We respect your privacy and do not store any data.
 
@@ -27,6 +28,7 @@ Welcome to our AES (Advanced Encryption Standard) Encryption/Decryption Online T
 
 - **Key Management**: Ensure you keep your secret key safe and secure. Losing the key means you will not be able to decrypt your data.
 - **Data Privacy**: We do not store any of your text or keys. All operations are performed locally on your device.
+- **SHA Key Processing**: This is not standard AES decryption. The input key is processed with SHA, which allows you to use keys of any length for encryption and decryption.
 
 ## Disclaimer
 
@@ -48,6 +50,7 @@ Thank you for using our AES Encryption/Decryption Online Tool! (⌒▽⌒)☆
 
 - **安全加密**：使用自定义密钥对您的文本进行AES加密。
 - **安全解密**：使用相同的密钥解密先前加密的文本。
+- **SHA密钥处理**：输入密钥通过SHA处理，以允许使用任何长度的密钥进行加密和解密。
 - **用户友好界面**：简单直观的界面，便于使用。
 - **隐私保护**：我们尊重您的隐私，不会存储任何数据。
 
@@ -69,6 +72,7 @@ Thank you for using our AES Encryption/Decryption Online Tool! (⌒▽⌒)☆
 
 - **密钥管理**：确保妥善保管您的密钥。丢失密钥将导致无法解密您的数据。
 - **数据隐私**：我们不会存储您的任何文本或密钥。所有操作均在您的设备上本地执行。
+- **SHA密钥处理**：这不是常规的AES解密。输入密钥通过SHA处理，这使得您可以使用任何长度的密钥进行加密和解密。
 
 ## 免责声明
 
