@@ -4,67 +4,168 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AES Encryption/Decryption Tool</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
+            font-family: 'Roboto', sans-serif;
+            background: #f0f0f0;
+            padding-top: 20px;
         }
-        input, textarea {
-            width: 100%;
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+            max-width: 90%;
+        }
+        textarea, input, select {
             margin-bottom: 10px;
-            padding: 10px;
-            font-size: 16px;
         }
         button {
-            padding: 10px 20px;
-            font-size: 16px;
+            margin-top: 10px;
+        }
+        .result-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .copy-btn {
+            margin-left: 10px;
+        }
+        h1, h2 {
+            word-break: break-word;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #555;
         }
     </style>
 </head>
 <body>
-    <h1>AES Encryption/Decryption Tool</h1>
-    <div>
-        <h2>Encryption</h2>
-        <textarea id="plainText" rows="5" placeholder="Enter text to encrypt"></textarea>
-        <input type="text" id="keyEncrypt" placeholder="Enter encryption key">
-        <button onclick="encrypt()">Encrypt</button>
-        <textarea id="encryptedText" rows="5" placeholder="Encrypted text will appear here" readonly></textarea>
+    <div class="container">
+        <h1 class="text-center">AES Encryption/Decryption Tool</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Encryption</h2>
+                <textarea id="plainText" class="form-control" rows="5" placeholder="Enter text to encrypt"></textarea>
+                <input type="text" id="keyEncrypt" class="form-control" placeholder="Enter encryption key">
+                <select id="encryptionMode" class="form-control">
+                    <option value="AES-256">AES-256</option>
+                    <option value="AES-128">AES-128</option>
+                </select>
+                <select id="encryptionType" class="form-control">
+                    <option value="ECB">ECB</option>
+                    <option value="CBC">CBC</option>
+                </select>
+                <div class="result-container">
+                    <button onclick="encrypt()" class="btn btn-primary">Encrypt</button>
+                    <button class="btn btn-success copy-btn" onclick="copyText('encryptedText')">Copy</button>
+                </div>
+                <textarea id="encryptedText" class="form-control" rows="5" placeholder="Encrypted text will appear here" readonly></textarea>
+            </div>
+            <div class="col-md-6">
+                <h2>Decryption</h2>
+                <textarea id="cipherText" class="form-control" rows="5" placeholder="Enter text to decrypt"></textarea>
+                <input type="text" id="keyDecrypt" class="form-control" placeholder="Enter decryption key">
+                <select id="decryptionMode" class="form-control">
+                    <option value="AES-256">AES-256</option>
+                    <option value="AES-128">AES-128</option>
+                </select>
+                <select id="decryptionType" class="form-control">
+                    <option value="ECB">ECB</option>
+                    <option value="CBC">CBC</option>
+                </select>
+                <div class="result-container">
+                    <button onclick="decrypt()" class="btn btn-primary">Decrypt</button>
+                    <button class="btn btn-success copy-btn" onclick="copyText('decryptedText')">Copy</button>
+                </div>
+                <textarea id="decryptedText" class="form-control" rows="5" placeholder="Decrypted text will appear here" readonly></textarea>
+            </div>
+        </div>
     </div>
-    <div>
-        <h2>Decryption</h2>
-        <textarea id="cipherText" rows="5" placeholder="Enter text to decrypt"></textarea>
-        <input type="text" id="keyDecrypt" placeholder="Enter decryption key">
-        <button onclick="decrypt()">Decrypt</button>
-        <textarea id="decryptedText" rows="5" placeholder="Decrypted text will appear here" readonly></textarea>
+
+    <div class="footer">
+        <p>Made with ❤️ by <a href="https://github.com/simple-shadow/Aes-online-encdec" target="_blank">simple-shadow</a> and assisted by ChatGPT (GPT-4o)</p>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script>
-        function hashKey(key) {
-            return CryptoJS.SHA256(key).toString(CryptoJS.enc.Hex).substring(0, 32);
+        function hashKey(key, mode) {
+            if (mode === 'AES-128') {
+                return CryptoJS.SHA256(key).toString(CryptoJS.enc.Hex).substring(0, 32);
+            } else {
+                return CryptoJS.SHA256(key).toString(CryptoJS.enc.Hex);
+            }
         }
 
         function encrypt() {
             const plainText = document.getElementById('plainText').value;
             const key = document.getElementById('keyEncrypt').value;
-            const hashedKey = hashKey(key);
-            const encrypted = CryptoJS.AES.encrypt(plainText, CryptoJS.enc.Hex.parse(hashedKey), {
-                mode: CryptoJS.mode.ECB,
-                padding: CryptoJS.pad.Pkcs7
-            });
-            document.getElementById('encryptedText').value = encrypted.toString();
+            const mode = document.getElementById('encryptionMode').value;
+            const type = document.getElementById('encryptionType').value;
+            const hashedKey = hashKey(key, mode);
+            let encrypted;
+            if (type === 'ECB') {
+                encrypted = CryptoJS.AES.encrypt(plainText, CryptoJS.enc.Hex.parse(hashedKey), {
+                    mode: CryptoJS.mode.ECB,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+            } else {
+                const iv = CryptoJS.lib.WordArray.random(16);
+                encrypted = CryptoJS.AES.encrypt(plainText, CryptoJS.enc.Hex.parse(hashedKey), {
+                    iv: iv,
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+                encrypted = iv.concat(encrypted.ciphertext);
+            }
+            document.getElementById('encryptedText').value = encrypted.toString(CryptoJS.enc.Base64);
         }
 
         function decrypt() {
             const cipherText = document.getElementById('cipherText').value;
             const key = document.getElementById('keyDecrypt').value;
-            const hashedKey = hashKey(key);
-            const decrypted = CryptoJS.AES.decrypt(cipherText, CryptoJS.enc.Hex.parse(hashedKey), {
-                mode: CryptoJS.mode.ECB,
-                padding: CryptoJS.pad.Pkcs7
-            });
+            const mode = document.getElementById('decryptionMode').value;
+            const type = document.getElementById('decryptionType').value;
+            const hashedKey = hashKey(key, mode);
+            let decrypted;
+            if (type === 'ECB') {
+                decrypted = CryptoJS.AES.decrypt(cipherText, CryptoJS.enc.Hex.parse(hashedKey), {
+                    mode: CryptoJS.mode.ECB,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+            } else {
+                const cipherParams = CryptoJS.lib.CipherParams.create({
+                    ciphertext: CryptoJS.enc.Base64.parse(cipherText)
+                });
+                const iv = CryptoJS.lib.WordArray.create(cipherParams.ciphertext.words.slice(0, 4));
+                const ciphertext = CryptoJS.lib.WordArray.create(cipherParams.ciphertext.words.slice(4));
+                decrypted = CryptoJS.AES.decrypt({ ciphertext: ciphertext }, CryptoJS.enc.Hex.parse(hashedKey), {
+                    iv: iv,
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+            }
             document.getElementById('decryptedText').value = decrypted.toString(CryptoJS.enc.Utf8);
         }
+
+        function copyText(elementId) {
+            const text = document.getElementById(elementId);
+            text.select();
+            text.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            text.blur();  // Remove the focus from the textarea
+        }
+
+        // Set default encryption mode to AES-256
+        document.getElementById('encryptionMode').value = 'AES-256';
+        document.getElementById('decryptionMode').value = 'AES-256';
     </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
