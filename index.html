@@ -95,9 +95,9 @@
     <script>
         function hashKey(key, mode) {
             if (mode === 'AES-128') {
-                return CryptoJS.SHA256(key).toString(CryptoJS.enc.Hex).substring(0, 32);
+                return CryptoJS.enc.Hex.parse(CryptoJS.SHA256(key).toString(CryptoJS.enc.Hex).substring(0, 32));
             } else {
-                return CryptoJS.SHA256(key).toString(CryptoJS.enc.Hex);
+                return CryptoJS.enc.Hex.parse(CryptoJS.SHA256(key).toString(CryptoJS.enc.Hex));
             }
         }
 
@@ -109,13 +109,13 @@
             const hashedKey = hashKey(key, mode);
             let encrypted;
             if (type === 'ECB') {
-                encrypted = CryptoJS.AES.encrypt(plainText, CryptoJS.enc.Hex.parse(hashedKey), {
+                encrypted = CryptoJS.AES.encrypt(plainText, hashedKey, {
                     mode: CryptoJS.mode.ECB,
                     padding: CryptoJS.pad.Pkcs7
                 });
             } else {
                 const iv = CryptoJS.lib.WordArray.random(16);
-                encrypted = CryptoJS.AES.encrypt(plainText, CryptoJS.enc.Hex.parse(hashedKey), {
+                encrypted = CryptoJS.AES.encrypt(plainText, hashedKey, {
                     iv: iv,
                     mode: CryptoJS.mode.CBC,
                     padding: CryptoJS.pad.Pkcs7
@@ -133,17 +133,14 @@
             const hashedKey = hashKey(key, mode);
             let decrypted;
             if (type === 'ECB') {
-                decrypted = CryptoJS.AES.decrypt(cipherText, CryptoJS.enc.Hex.parse(hashedKey), {
+                decrypted = CryptoJS.AES.decrypt(cipherText, hashedKey, {
                     mode: CryptoJS.mode.ECB,
                     padding: CryptoJS.pad.Pkcs7
                 });
             } else {
-                const cipherParams = CryptoJS.lib.CipherParams.create({
-                    ciphertext: CryptoJS.enc.Base64.parse(cipherText)
-                });
-                const iv = CryptoJS.lib.WordArray.create(cipherParams.ciphertext.words.slice(0, 4));
-                const ciphertext = CryptoJS.lib.WordArray.create(cipherParams.ciphertext.words.slice(4));
-                decrypted = CryptoJS.AES.decrypt({ ciphertext: ciphertext }, CryptoJS.enc.Hex.parse(hashedKey), {
+                const iv = CryptoJS.lib.WordArray.create(CryptoJS.enc.Base64.parse(cipherText).words.slice(0, 4));
+                const ciphertext = CryptoJS.lib.WordArray.create(CryptoJS.enc.Base64.parse(cipherText).words.slice(4));
+                decrypted = CryptoJS.AES.decrypt({ ciphertext: ciphertext }, hashedKey, {
                     iv: iv,
                     mode: CryptoJS.mode.CBC,
                     padding: CryptoJS.pad.Pkcs7
@@ -157,7 +154,7 @@
             text.select();
             text.setSelectionRange(0, 99999);
             document.execCommand("copy");
-            text.blur();  // Remove the focus from the textarea
+            text.blur();
         }
 
         // Set default encryption mode to AES-256
