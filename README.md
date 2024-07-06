@@ -1,3 +1,5 @@
+If you like my work, please give a ⭐️
+如果你喜欢我的作品，请给一颗⭐️
 # AES Encryption/Decryption Online Tool
 
 Welcome to our AES (Advanced Encryption Standard) Encryption/Decryption Online Tool! This tool allows you to securely encrypt and decrypt text using the AES algorithm. Below, you'll find instructions on how to use the tool, along with important disclaimers.
