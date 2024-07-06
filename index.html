@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES Encryption/Decryption Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        input, textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>AES Encryption/Decryption Tool</h1>
+    <div>
+        <h2>Encryption</h2>
+        <textarea id="plainText" rows="5" placeholder="Enter text to encrypt"></textarea>
+        <input type="text" id="keyEncrypt" placeholder="Enter encryption key">
+        <button onclick="encrypt()">Encrypt</button>
+        <textarea id="encryptedText" rows="5" placeholder="Encrypted text will appear here" readonly></textarea>
+    </div>
+    <div>
+        <h2>Decryption</h2>
+        <textarea id="cipherText" rows="5" placeholder="Enter text to decrypt"></textarea>
+        <input type="text" id="keyDecrypt" placeholder="Enter decryption key">
+        <button onclick="decrypt()">Decrypt</button>
+        <textarea id="decryptedText" rows="5" placeholder="Decrypted text will appear here" readonly></textarea>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        function hashKey(key) {
+            return CryptoJS.SHA256(key).toString(CryptoJS.enc.Hex).substring(0, 32);
+        }
+
+        function encrypt() {
+            const plainText = document.getElementById('plainText').value;
+            const key = document.getElementById('keyEncrypt').value;
+            const hashedKey = hashKey(key);
+            const encrypted = CryptoJS.AES.encrypt(plainText, CryptoJS.enc.Hex.parse(hashedKey), {
+                mode: CryptoJS.mode.ECB,
+                padding: CryptoJS.pad.Pkcs7
+            });
+            document.getElementById('encryptedText').value = encrypted.toString();
+        }
+
+        function decrypt() {
+            const cipherText = document.getElementById('cipherText').value;
+            const key = document.getElementById('keyDecrypt').value;
+            const hashedKey = hashKey(key);
+            const decrypted = CryptoJS.AES.decrypt(cipherText, CryptoJS.enc.Hex.parse(hashedKey), {
+                mode: CryptoJS.mode.ECB,
+                padding: CryptoJS.pad.Pkcs7
+            });
+            document.getElementById('decryptedText').value = decrypted.toString(CryptoJS.enc.Utf8);
+        }
+    </script>
+</body>
+</html>
