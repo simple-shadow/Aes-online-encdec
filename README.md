@@ -3,8 +3,8 @@
 **开源软件 / Open Source Software**
 
 ## 免责声明 / Disclaimer
-请在使用本工具之前，阅读[服务条款](./TOS.MD)。  
-Please read the [TOS](./TOS.MD) before using this tool.
+请在使用本工具之前，阅读[用户协议](./UserAgreement.MD)。  
+Please read the [User Agreement](./UserAgreement.MD) before using this tool.
 
 ## 许可证 / License
 详情请参见LICENSE文件。  
