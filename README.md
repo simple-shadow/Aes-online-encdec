@@ -2,7 +2,7 @@
 
 **开源软件 / Open Source Software**
 
-## 免责声明 / Disclaimer
+## 用户协议 / User Agreement
 请在使用本工具之前，阅读[用户协议](./UserAgreement.MD)。  
 Please read the [User Agreement](./UserAgreement.MD) before using this tool.
 
